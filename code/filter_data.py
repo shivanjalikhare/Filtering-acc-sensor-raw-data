@@ -59,7 +59,6 @@ def plot_lines(data,fs,title):
 
 
     
-    
 def median_filter(data, f_size):
     lgth, num_signal=data.shape
     f_data=np.zeros([lgth,num_signal])
@@ -77,7 +76,11 @@ def freq_filter(data, f_size, cutoff):
         f_data[:,i] = signal.convolve(data[:,i], lpf, mode='same')
     return f_data
 
-
+def plot3D(data,title):
+    fig=plt.figure()
+    ax=fig.add_subplot(111, projection='3d')
+    ax.plot(xs=data[:,0], ys=data[:,1], zs=data[:,2], zdir='z')
+    ax.set_title(title)
 
 def test_data(file_name):
     
@@ -96,6 +99,11 @@ def test_data(file_name):
     plot_lines(median_data, fs, 'median filter')
     plot_lines(lpf_data,fs,'low pass filter')
     plot_lines(comb_data, fs, 'median_low pass filter')
+    plot3D(data, 'raw data')
+    plot3D(median_data,'median filter')
+    plot3D(lpf_data, 'low pass filter')
+    plot3D(comb_data, 'median + lpf')
+	
     plt.show()
     
     
@@ -104,8 +112,7 @@ def test_data(file_name):
 	
 	
 	
-	
-	
+
 	
 
 if __name__ == '__main__':  
