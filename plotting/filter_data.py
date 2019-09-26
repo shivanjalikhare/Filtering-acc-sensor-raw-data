@@ -7,17 +7,12 @@ Created on Wed Sep 25 14:28:52 2019
 
 
 
-import math
-from scipy.fftpack import fft
+
 from scipy import signal
-from mpl_toolkits.mplot3d import Axes3D
 import os
-import sys
 import numpy as np
 import matplotlib.pyplot as plt
-from data_util import *
-import csv
-import pandas as pd
+
 
 def read_data(file_path, columns):
     mode = 'r'
@@ -29,7 +24,7 @@ def read_data(file_path, columns):
         num_cols=len(columns)
         print(str(num_cols), 'cols')
         data=np.zeros([num_rows,num_cols])
-        for indice, line in enumerate(lines[:]):
+        for indice, line in enumerate(lines[2:]):
             row=line.rstrip().split(',')
             #print(row)
             for ii,i in enumerate(columns):
@@ -56,7 +51,7 @@ def plot_lines(data,fs,title):
     ax.set_xlabel('Time [sec]')
     ax.set_title('Time domain ' +title )
     ax.legend
-
+    fig.savefig('Time domain ' +title)
 
     
 def median_filter(data, f_size):
@@ -81,6 +76,7 @@ def plot3D(data,title):
     ax=fig.add_subplot(111, projection='3d')
     ax.plot(xs=data[:,0], ys=data[:,1], zs=data[:,2], zdir='z')
     ax.set_title(title)
+    fig.savefig(title+"3D")
 
 def test_data(file_name):
     
@@ -88,9 +84,10 @@ def test_data(file_name):
     fs=512
     cutoff=10
     file_path=os.path.join(cur_dir, 'data', file_name)
-    data=read_data(file_path, [0,1,2])
+    #change the column number according to your data set
+    data=read_data(file_path, [2,3,4])
     plot_lines(data, fs, 'Raw data')
-    #fft_plot(data, fs, 'Raw data')
+    
     median_data=median_filter(data, 155)
     lpf_data=freq_filter(data, 155, cutoff/fs)
     comb_data=freq_filter(median_data, 155, cutoff/fs)
@@ -107,13 +104,8 @@ def test_data(file_name):
     plt.show()
     
     
-	
-	
-	
-	
-	
+    
 
-	
 
 if __name__ == '__main__':  
     input_id = input("filename")
